@@ -1,0 +1,134 @@
+accounts = {}  # Stores username: password
+ledger = {}    # Stores username: balance
+name = {}      # Stores username: first name
+
+def welcome_page():
+    print("====================================")
+    print("   Welcome to the Bank of Harrenhal")
+    print("====================================")
+    print("1. Create an Account")
+    print("2. Login to Your Account")
+    print("3. Exit")
+    print("====================================")
+
+    intro_choices()
+
+def create_account():
+    print("====================================")
+    print("Creating a new account...")
+    print("====================================")
+
+    first_name = input("Enter your first name: ")
+    username = input(f"Welcome {first_name}, choose a username: ")
+
+    while username in accounts:
+        print("That username already exists. Please choose a different one.")
+        username = input("Enter a different username: ")
+
+    password = input("Enter your password: ")
+
+    accounts[username] = password
+    name[username] = first_name
+    ledger[username] = 0.0  # Initialize balance
+
+    print("Account created successfully!")
+    login_to_account()
+
+def login_to_account():
+    print("====================================")
+    print("Login to your account")
+    print("====================================")
+
+    username = input("Enter your username: ")
+    if username in accounts:
+        password = input("Enter your password: ")
+        if accounts[username] == password:
+            print("Login successful!")
+            user_dashboard(username)
+        else:
+            print("Incorrect password. Try again.")
+            login_to_account()
+    else:
+        print("Username not found. Please create an account first.")
+        login_choice = input("Do you want to create an account? (yes/no): ")
+        if login_choice.lower() == "yes":
+            create_account()
+        else:
+            print("How can I help you today")
+            welcome_page()
+
+def user_dashboard(username):
+    while True:
+        print("====================================")
+        print(f"Welcome, {name[username]}!")
+        print("====================================")
+        print("1. View Account Details")
+        print("2. Deposit Funds")
+        print("3. Withdraw Funds")
+        print("4. Logout")
+        print("====================================")
+
+        choice = input("Enter your choice: ")
+        if choice == "1":
+            view_account_details(username)
+        elif choice == "2":
+            deposit_funds(username)
+        elif choice == "3":
+            withdraw_funds(username)
+        elif choice == "4":
+            print("Logging out...")
+            welcome_page()
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+def view_account_details(username):
+    print("====================================")
+    print(f"Account Holder: {name[username]}")
+    print(f"Username: {username}")
+    print(f"Balance: ${ledger[username]:.2f}")
+    print("====================================")
+
+def deposit_funds(username):
+    print("====================================")
+    print(f"Your current balance is: ${ledger[username]:.2f}")
+    print("====================================")
+    amount = float(input("Enter the amount to deposit: "))
+    if amount > 0:
+        ledger[username] += amount
+        print(f"Deposit successful! New balance: ${ledger[username]:.2f}")
+    else:
+        print("Invalid amount.")
+
+def withdraw_funds(username):
+    print("====================================")
+    print(f"Your current balance is: ${ledger[username]:.2f}")
+    print("====================================")
+    amount = float(input("Enter the amount to withdraw: "))
+    if amount > 0:
+        ledger[username] -= amount
+        if ledger[username] < 0:
+            print("Insufficient funds.")
+            return
+        print(f"Deposit successful! New balance: ${ledger[username]:.2f}")
+    else:
+        print("Invalid amount.")
+
+def intro_choices():
+    choice = input("Enter your choice: ")
+    if choice == "1":
+        create_account()
+    elif choice == "2":
+        login_to_account()
+    elif choice == "3":
+        print("Thank you for using the Bank of Harrenhal. Goodbye!")
+        exit()
+    else:
+        print("Invalid choice. Please try again.")
+        welcome_page()
+
+def main():
+    welcome_page()
+
+if __name__ == "__main__":
+    main()
